@@ -49,7 +49,22 @@ describe "Authentication" do
   end
   
   describe "authorization" do
+  
+    describe "for signed-in users" do
+      let(:user) { FactoryGirl.create(:user) }
+      before { sign_in user, no_capybara: true }
     
+      describe "when attempting to visit signup page" do
+        before { get signup_path } 
+        specify { response.should redirect_to(root_path) }
+      end
+     
+      describe "when attempting to create a second user" do
+        before { post users_path }
+        specify { response.should redirect_to(root_path) }
+      end
+    end
+  
     describe "for non-signed-in users" do
       let(:user) { FactoryGirl.create(:user) }
       
